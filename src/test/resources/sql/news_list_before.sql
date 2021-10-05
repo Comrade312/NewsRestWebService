@@ -1,0 +1,17 @@
+insert into news (id, date, title, text, user_id)
+values (1, '1990-04-22', 'Puppies are threat', 'Puppies are the most dangerous than soy milk', 4),
+       (2, '1990-04-22', 'Kittens are threat', 'Kittens are the most dangerous than soy TikTok', 4),
+       (3, '1990-04-22', 'Title for edit', 'Title are the most dangerous than soy milk', 4),
+       (4, '1990-04-22', 'Dogs are threat', 'Dogs are the most dangerous than Instagram', 4),
+       (5, '1990-04-22', 'Puppies1 are threat', 'Puppies1 are the most dangerous than soy milk', 4),
+       (6, '1990-04-22', 'Title for delete', 'Title are the most dangerous than soy milk', 4),
+       (7, '1990-04-22', 'Bubbles are threat', 'Bubbles are the most dangerous than soy milk', 4),
+       (8, '1990-04-22', 'Trees are threat', 'Trees are the most dangerous than balls', 4),
+       (9, '1990-04-22', 'Scissors are threat', 'Scissors are the most dangerous than soy Godzilla', 4),
+       (10, '1990-04-22', 'Chairs are threat', 'Chairs are the most dangerous than radiation', 4),
+       (11, '1990-04-22', 'Bottles are threat', 'Bottles are the most dangerous than sunboy', 5),
+       (12, '1990-04-22', 'Keyboards are threat', 'Keyboards are the most dangerous than soy milk', 5),
+       (13, '1990-04-22', 'Monitors are threat', 'Monitors are the most dangerous than soy Oracle', 5),
+       (14, '1990-04-22', 'Puppies are threat', 'Puppies10 are the most dangerous than soy milk', 5),
+       (15, '1990-04-22', 'Puppies11 are threat', 'Puppies11 are the most dangerous than soy milk', 5),
+       (16, '1990-04-22', 'Puppies12 are threat', 'Puppies12 are the most dangerous than soy milk', 5);

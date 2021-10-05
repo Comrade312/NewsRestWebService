@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package proto;
+
+option java_package = "com.example.demo.dto";
+option java_outer_classname = "NewsProto";
+
+message NewsDto {
+  int64 id = 1;
+  string date = 2;
+  string title = 3;
+  string text = 4;
+  int64 user_id = 5;
+  repeated NewsComment comments = 6;
+}
+
+message NewsComment {
+  int64 id = 1;
+  string date = 2;
+  string text = 3;
+  int64 user_id = 4;
+}
+
+message NewsSimpleDto {
+  int64 id = 1;
+  string date = 2;
+  string title = 3;
+  string text = 4;
+  int64 user_id = 5;
+}
+
+message NewsSimpleDtoList {
+  repeated NewsSimpleDto newsDto = 1;
+}
+

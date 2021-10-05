@@ -1,0 +1,15 @@
+insert into comment (id, date, text, user_id, news_id)
+values (1, '2010-04-22', 'Puppies are threat', 6, 1),
+       (2, '2020-04-22', 'Kittens are threat', 6, 2),
+       (3, '2017-04-22', 'Text for edit', 6, 3),
+       (4, '2017-04-22', 'Dogs are threat', 6, 3),
+       (5, '2016-04-22', 'Puppies1 are threat', 6, 2),
+       (6, '2012-04-22', 'Text for delete', 7, 1),
+       (7, '2014-04-22', 'Puppies3 are threat', 7, 5),
+       (8, '2019-04-22', 'WOW! Awesome!', 7, 4),
+       (9, '2011-04-22', 'Puppies6 are threat', 7, 5),
+       (10, '2021-04-22', 'Puppies6 are threat', 7, 6),
+       (11, '2020-04-22', 'Puppies7 are threat', 6, 2),
+       (12, '2019-04-22', 'I already know that...', 6, 1),
+       (13, '2018-04-22', 'Boring!', 6, 3),
+       (14, '2017-04-22', 'Puppies are nice)))', 7, 4);

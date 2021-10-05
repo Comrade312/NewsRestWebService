@@ -1,0 +1,56 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.google.protobuf' version '0.8.17'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-test'
+    implementation 'javax.validation:validation-api:2.0.0.Final'
+    implementation 'org.flywaydb:flyway-core:7.15.0'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.google.protobuf:protobuf-java:3.17.3'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'com.github.tomakehurst:wiremock:2.27.2'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+protobuf {
+    generatedFilesBaseDir = "$projectDir/src/"
+
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.0.0"
+    }
+
+}
+
+test {
+    useJUnitPlatform()
+}
