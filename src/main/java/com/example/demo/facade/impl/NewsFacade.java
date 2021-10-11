@@ -1,4 +1,4 @@
-package com.example.demo.facade;
+package com.example.demo.facade.impl;
 
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.News;
@@ -6,8 +6,9 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.exception.news.NewsNotFoundException;
 import com.example.demo.exception.request.NotEnoughRightsException;
-import com.example.demo.service.CommentService;
-import com.example.demo.service.NewsService;
+import com.example.demo.facade.NewsCrudFacade;
+import com.example.demo.service.impl.CommentService;
+import com.example.demo.service.impl.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +27,18 @@ import static com.example.demo.dto.NewsProto.NewsSimpleDtoList;
  * Calls a method from {@link NewsService}
  */
 @Service
-public class NewsFacade {
-    @Autowired
-    private NewsService newsService;
+public class NewsFacade implements NewsCrudFacade {
+    private final NewsService newsService;
+
+    private final CommentService commentService;
 
     @Autowired
-    private CommentService commentService;
+    public NewsFacade(NewsService newsService, CommentService commentService) {
+        this.newsService = newsService;
+        this.commentService = commentService;
+    }
 
-    /**
-     * Method which returns all available {@link News}
-     * and convert it into {@link NewsSimpleDto}
-     *
-     * @return {@link NewsSimpleDtoList} of {@link NewsSimpleDto}
-     */
+    @Override
     public NewsSimpleDtoList findAll() {
         return NewsSimpleDtoList.newBuilder()
                 .addAllNewsDto(newsService.findAll().stream()
@@ -53,14 +53,7 @@ public class NewsFacade {
                 .build();
     }
 
-    /**
-     * Method which returns all available {@link News} with page format
-     * and convert it into {@link NewsSimpleDto}
-     *
-     * @param page page number
-     * @param size page size
-     * @return {@link NewsSimpleDtoList} of {@link NewsSimpleDto}
-     */
+    @Override
     public NewsSimpleDtoList findAll(Integer page, Integer size) {
         return NewsSimpleDtoList.newBuilder()
                 .addAllNewsDto(newsService.findAll(page, size).stream()
@@ -74,13 +67,7 @@ public class NewsFacade {
                 .build();
     }
 
-    /**
-     * Method which returns {@link News} with specified id
-     * and convert it into {@link NewsDto}
-     *
-     * @param id {@link News} objects id for search
-     * @return {@link NewsDto} object wrap into {@link Optional}
-     */
+    @Override
     public Optional<NewsDto> findById(Long id) {
         return newsService.findById(id)
                 .map(value -> NewsDto.newBuilder()
@@ -101,15 +88,7 @@ public class NewsFacade {
                 );
     }
 
-    /**
-     * Method which returns {@link News} with specified id and pageable comments
-     * and convert it into {@link NewsDto}
-     *
-     * @param id   {@link News} objects id for search
-     * @param page page number for comments
-     * @param size page size for comments
-     * @return {@link NewsDto} object wrap into {@link Optional}
-     */
+    @Override
     public Optional<NewsDto> findByIdWithPageComment(Long id, Integer page, Integer size) {
         List<Comment> comments = commentService.findByNewsId(id, page, size);
         return newsService.findById(id)
@@ -131,13 +110,7 @@ public class NewsFacade {
                 );
     }
 
-    /**
-     * Method finds {@link News} objects by title
-     * and convert it into {@link NewsSimpleDto}
-     *
-     * @param title {@link News} object to find object by text
-     * @return {@link NewsSimpleDtoList} that have provided text
-     */
+    @Override
     public NewsSimpleDtoList findByTitle(String title) {
         return NewsSimpleDtoList.newBuilder()
                 .addAllNewsDto(newsService.findByTitle(title).stream()
@@ -151,13 +124,7 @@ public class NewsFacade {
                 .build();
     }
 
-    /**
-     * Method finds {@link News} objects by title partially contains param
-     * and convert it into {@link NewsSimpleDto}
-     *
-     * @param title {@link News} object to find object by text
-     * @return {@link NewsSimpleDtoList} that have provided text
-     */
+    @Override
     public NewsSimpleDtoList findByTitleContains(String title) {
         return NewsSimpleDtoList.newBuilder()
                 .addAllNewsDto(newsService.findByTitleContains(title).stream()
@@ -171,13 +138,7 @@ public class NewsFacade {
                 .build();
     }
 
-    /**
-     * Method finds {@link News} objects by text
-     * and convert it into {@link NewsSimpleDto}
-     *
-     * @param text {@link News} object to find object by text
-     * @return {@link NewsSimpleDtoList} that have provided text
-     */
+    @Override
     public NewsSimpleDtoList findByText(String text) {
         return NewsSimpleDtoList.newBuilder()
                 .addAllNewsDto(newsService.findByText(text).stream()
@@ -191,13 +152,7 @@ public class NewsFacade {
                 .build();
     }
 
-    /**
-     * Method finds {@link News} objects by text partially contains param
-     * and convert it into {@link NewsSimpleDto}
-     *
-     * @param text {@link News} object to find object by text
-     * @return {@link NewsSimpleDtoList} that have provided text
-     */
+    @Override
     public NewsSimpleDtoList findByTextContains(String text) {
         return NewsSimpleDtoList.newBuilder()
                 .addAllNewsDto(newsService.findByTextContains(text).stream()
@@ -211,13 +166,7 @@ public class NewsFacade {
                 .build();
     }
 
-    /**
-     * Method which creates new {@link News}.
-     * Converts {@link NewsSimpleDto} to {@link News} and then save it
-     *
-     * @param newsDto {@link NewsSimpleDto} dto object which needs to created
-     * @param user    {@link User} that call method
-     */
+    @Override
     public void save(NewsSimpleDto newsDto, User user) {
         News news = new News();
         news.setDate(LocalDateTime.now());
@@ -228,15 +177,7 @@ public class NewsFacade {
         newsService.save(news);
     }
 
-    /**
-     * Method which updates {@link News}.
-     * Converts {@link NewsSimpleDto} to {@link News} and then update it
-     *
-     * @param id      {@link News} from request url
-     * @param newsDto {@link NewsSimpleDto} object dto to update
-     * @param user    {@link User} that call method
-     * @throws NotEnoughRightsException if user dont have right to update news
-     */
+    @Override
     public void update(Long id, NewsSimpleDto newsDto, User user) {
         //Can be updated by owner or admin
         if ((newsDto.getUserId() == user.getId() && !user.getAuthorities().contains(Role.SUBSCRIBER))
@@ -253,13 +194,7 @@ public class NewsFacade {
         }
     }
 
-    /**
-     * Method which deletes {@link News} object by id
-     *
-     * @param id   {@link News} object to delete
-     * @param user {@link User} that call method
-     * @throws NotEnoughRightsException if user dont have right to delete news
-     */
+    @Override
     public void deleteById(Long id, User user) {
         News news = newsService.findById(id)
                 .orElseThrow(() -> new NewsNotFoundException(id));

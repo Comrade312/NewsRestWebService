@@ -1,4 +1,4 @@
-package com.example.demo.facade;
+package com.example.demo.facade.impl;
 
 
 import com.example.demo.dto.UserProto;
@@ -6,7 +6,8 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.exception.request.NotEnoughRightsException;
 import com.example.demo.exception.user.UserNotFoundException;
-import com.example.demo.service.UserService;
+import com.example.demo.facade.UserCrudFacade;
+import com.example.demo.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +25,15 @@ import static com.example.demo.dto.UserProto.UserSimpleDtoList;
  * Calls a method from {@link UserService}
  */
 @Service
-public class UserFacade {
-    @Autowired
-    private UserService userService;
+public class UserFacade implements UserCrudFacade {
+    private final UserService userService;
 
-    /**
-     * Method which returns all available {@link User}
-     * and convert it into {@link UserSimpleDto}
-     *
-     * @return {@link UserSimpleDtoList} of {@link UserSimpleDto}
-     */
+    @Autowired
+    public UserFacade(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Override
     public UserSimpleDtoList findAll() {
         return UserSimpleDtoList.newBuilder()
                 .addAllUserDto(userService.findAll().stream()
@@ -50,13 +50,7 @@ public class UserFacade {
                 .build();
     }
 
-    /**
-     * Method which returns {@link User} with specified id
-     * and convert it into {@link UserDto}
-     *
-     * @param id {@link User} objects id for search
-     * @return {@link UserDto} object wrap into {@link Optional}
-     */
+    @Override
     public Optional<UserDto> findById(Long id) {
         return userService.findById(id)
                 .map(value -> UserDto.newBuilder()
@@ -86,13 +80,7 @@ public class UserFacade {
                 );
     }
 
-    /**
-     * Method which creates new {@link User}.
-     * Converts {@link UserSimpleDto} to {@link User} and then save it
-     *
-     * @param userDto {@link UserSimpleDto} dto object which needs to created
-     * @param user    {@link User} that call method
-     */
+    @Override
     public void save(UserSimpleDto userDto, User user) {
         User userNew = new User();
         userNew.setUsername(userDto.getUsername());
@@ -109,15 +97,7 @@ public class UserFacade {
         }
     }
 
-    /**
-     * Method which updates {@link User}.
-     * Converts {@link UserSimpleDto} to {@link User} and then update it
-     *
-     * @param id      {@link User} from request url
-     * @param userDto {@link UserSimpleDto} object dto to update
-     * @param user    {@link User} that call method
-     * @throws NotEnoughRightsException if user dont have right to update news
-     */
+    @Override
     public void update(Long id, UserSimpleDto userDto, User user) {
         if (userDto.getId() == user.getId() || user.getAuthorities().contains(Role.ADMIN)) {
             User userFromDto = new User();
@@ -137,13 +117,7 @@ public class UserFacade {
         }
     }
 
-    /**
-     * Method which deletes {@link User} object by id
-     *
-     * @param id   {@link User} object to delete
-     * @param user {@link User} that call method
-     * @throws NotEnoughRightsException if user dont have right to delete user
-     */
+    @Override
     public void deleteById(Long id, User user) {
         User userDb = userService.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));

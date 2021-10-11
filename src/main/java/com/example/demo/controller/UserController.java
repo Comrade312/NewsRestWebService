@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.User;
-import com.example.demo.facade.UserFacade;
+import com.example.demo.facade.UserCrudFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,12 @@ import static com.example.demo.dto.UserProto.UserSimpleDtoList;
 @RequestMapping(value = "/api/user")
 @PreAuthorize("hasAnyAuthority('ADMIN')")
 public class UserController {
+    private final UserCrudFacade userFacade;
+
     @Autowired
-    private UserFacade userFacade;
+    public UserController(UserCrudFacade userFacade) {
+        this.userFacade = userFacade;
+    }
 
     /**
      * Method which shows all available {@link User}

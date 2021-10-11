@@ -1,10 +1,11 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
 import com.example.demo.exception.request.BadRequestParametersException;
 import com.example.demo.exception.user.UserNotFoundException;
 import com.example.demo.exception.user.UsernameReservedException;
 import com.example.demo.repo.UserRepo;
+import com.example.demo.service.UserCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,42 +21,33 @@ import java.util.Optional;
  * Calls a method from {@link UserRepo}
  */
 @Service
-public class UserService implements UserDetailsService {
-    @Autowired
-    private UserRepo userRepo;
+public class UserService implements UserDetailsService, UserCrudService {
+    private final UserRepo userRepo;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+        this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    /**
-     * Find {@link User} object by id
-     *
-     * @param id {@link User} object to find object by id.
-     * @return {@link User} object wrapped into {@link Optional}
-     */
+    @Override
     public Optional<User> findById(Long id) {
         return userRepo.findById(id);
     }
 
-    /**
-     * Find all {@link User} objects
-     *
-     * @return list of {@link User} objects.
-     */
+    @Override
     public List<User> findAll() {
         return userRepo.findAll();
     }
 
-    /**
-     * Save {@link User} object to save
-     *
-     * @param user {@link User} object to save
-     */
+    @Override
     public void save(User user) {
         if (userRepo.existsByUsername(user.getUsername())) {
             throw new UsernameReservedException(user.getUsername());
@@ -67,14 +59,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    /**
-     * Update {@link User} object
-     *
-     * @param id   {@link User} from request url
-     * @param user {@link User} object to update
-     * @throws BadRequestParametersException when id from url not equal with id from {@link User} object
-     * @throws UserNotFoundException         when there is no {@link User} object in database with provided id
-     */
+    @Override
     public void update(Long id, User user) {
         User userDb = userRepo.findById(user.getId())
                 .orElseThrow(() -> new UserNotFoundException(user.getId()));
@@ -91,12 +76,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    /**
-     * Delete {@link User} object by id
-     *
-     * @param id {@link User} object to delete
-     * @throws UserNotFoundException when there is no {@link User} object in database with provided id
-     */
+    @Override
     public void deleteById(Long id) {
         if (userRepo.existsById(id)) {
             userRepo.deleteById(id);

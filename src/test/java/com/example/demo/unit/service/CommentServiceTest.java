@@ -4,7 +4,7 @@ import com.example.demo.entity.Comment;
 import com.example.demo.exception.comment.CommentNotFoundException;
 import com.example.demo.exception.request.BadRequestParametersException;
 import com.example.demo.repo.CommentRepo;
-import com.example.demo.service.CommentService;
+import com.example.demo.service.impl.CommentService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;

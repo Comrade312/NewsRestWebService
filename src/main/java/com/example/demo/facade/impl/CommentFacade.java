@@ -1,4 +1,4 @@
-package com.example.demo.facade;
+package com.example.demo.facade.impl;
 
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.News;
@@ -7,8 +7,9 @@ import com.example.demo.entity.User;
 import com.example.demo.exception.comment.CommentNotFoundException;
 import com.example.demo.exception.news.NewsNotFoundException;
 import com.example.demo.exception.request.NotEnoughRightsException;
-import com.example.demo.service.CommentService;
-import com.example.demo.service.NewsService;
+import com.example.demo.facade.CommentCrudFacade;
+import com.example.demo.service.impl.CommentService;
+import com.example.demo.service.impl.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,18 +27,18 @@ import static com.example.demo.dto.CommentProto.CommentSimpleDtoList;
  * Calls a method from {@link CommentService}
  */
 @Service
-public class CommentFacade {
-    @Autowired
-    private CommentService commentService;
+public class CommentFacade implements CommentCrudFacade {
+    private final CommentService commentService;
+
+    private final NewsService newsService;
 
     @Autowired
-    private NewsService newsService;
+    public CommentFacade(CommentService commentService, NewsService newsService) {
+        this.commentService = commentService;
+        this.newsService = newsService;
+    }
 
-    /**
-     * Method which returns all available {@link Comment} and convert it into {@link CommentSimpleDto}
-     *
-     * @return {@link CommentSimpleDtoList} of {@link CommentSimpleDto}
-     */
+    @Override
     public CommentSimpleDtoList findAll() {
         return CommentSimpleDtoList.newBuilder()
                 .addAllCommentDto(commentService.findAll().stream()
@@ -52,14 +53,7 @@ public class CommentFacade {
                 .build();
     }
 
-    /**
-     * Method which returns all available {@link Comment} with page format
-     * and convert it into {@link CommentSimpleDto}
-     *
-     * @param page page number
-     * @param size page size
-     * @return {@link CommentSimpleDtoList} of {@link CommentSimpleDto}
-     */
+    @Override
     public CommentSimpleDtoList findAll(Integer page, Integer size) {
         return CommentSimpleDtoList.newBuilder()
                 .addAllCommentDto(commentService.findAll(page, size).stream()
@@ -74,13 +68,7 @@ public class CommentFacade {
                 .build();
     }
 
-    /**
-     * Method which returns {@link Comment} with specified id
-     * and convert it into {@link CommentDto}
-     *
-     * @param id {@link Comment} objects id for search
-     * @return {@link CommentDto} object wrap into {@link Optional}
-     */
+    @Override
     public Optional<CommentDto> findById(Long id) {
         return commentService.findById(id)
                 .map(value -> CommentDto.newBuilder()
@@ -99,13 +87,7 @@ public class CommentFacade {
                 );
     }
 
-    /**
-     * Method finds {@link Comment} objects by text
-     * and convert it into {@link CommentSimpleDto}
-     *
-     * @param text {@link Comment} object to find object by text
-     * @return {@link CommentSimpleDtoList} that have provided text
-     */
+    @Override
     public CommentSimpleDtoList findByText(String text) {
         return CommentSimpleDtoList.newBuilder()
                 .addAllCommentDto(commentService.findByText(text).stream()
@@ -120,13 +102,7 @@ public class CommentFacade {
                 .build();
     }
 
-    /**
-     * Method finds {@link Comment} objects by text partially contains param
-     * and convert it into {@link CommentSimpleDto}
-     *
-     * @param text {@link Comment} object to find object by text
-     * @return {@link CommentSimpleDtoList} that have provided text
-     */
+    @Override
     public CommentSimpleDtoList findByTextContains(String text) {
         return CommentSimpleDtoList.newBuilder()
                 .addAllCommentDto(commentService.findByTextContains(text).stream()
@@ -141,13 +117,7 @@ public class CommentFacade {
                 .build();
     }
 
-    /**
-     * Method which creates new {@link Comment}.
-     * Converts {@link CommentSimpleDto} to {@link Comment} and then save it
-     *
-     * @param commentDto {@link CommentSimpleDto} dto object which needs to created
-     * @param user       {@link User} that call method
-     */
+    @Override
     public void save(CommentSimpleDto commentDto, User user) {
         Comment comment = new Comment();
         comment.setDate(LocalDateTime.now());
@@ -162,15 +132,7 @@ public class CommentFacade {
         commentService.save(comment);
     }
 
-    /**
-     * Method which updates {@link Comment}.
-     * Converts {@link CommentSimpleDto} to {@link Comment} and then update it
-     *
-     * @param id         {@link Comment} from request url
-     * @param commentDto {@link CommentSimpleDto} object dto to update
-     * @param user       {@link User} that call method
-     * @throws NotEnoughRightsException if user dont have right to update comment
-     */
+    @Override
     public void update(Long id, CommentSimpleDto commentDto, User user) {
         //Only owner or admin could update comment
         if (commentDto.getUserId() == user.getId() || user.getAuthorities().contains(Role.ADMIN)) {
@@ -185,13 +147,7 @@ public class CommentFacade {
         }
     }
 
-    /**
-     * Method which deletes {@link Comment} object by id
-     *
-     * @param id   {@link Comment} object to delete
-     * @param user {@link User} that call method
-     * @throws NotEnoughRightsException if user dont have right to delete comment
-     */
+    @Override
     public void deleteById(Long id, User user) {
         Comment comment = commentService.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException(id));

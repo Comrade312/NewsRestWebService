@@ -3,7 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.News;
 import com.example.demo.entity.User;
-import com.example.demo.facade.NewsFacade;
+import com.example.demo.facade.NewsCrudFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +29,12 @@ import static com.example.demo.dto.NewsProto.NewsSimpleDtoList;
 @RestController
 @RequestMapping(value = "/api/news")
 public class NewsController {
+    private final NewsCrudFacade newsFacade;
+
     @Autowired
-    private NewsFacade newsFacade;
+    public NewsController(NewsCrudFacade newsFacade) {
+        this.newsFacade = newsFacade;
+    }
 
     /**
      * Method which shows all available {@link News}

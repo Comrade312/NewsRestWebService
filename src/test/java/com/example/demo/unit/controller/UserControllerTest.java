@@ -2,7 +2,7 @@ package com.example.demo.unit.controller;
 
 import com.example.demo.controller.UserController;
 import com.example.demo.entity.User;
-import com.example.demo.facade.UserFacade;
+import com.example.demo.facade.impl.UserFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

@@ -1,8 +1,9 @@
-package com.example.demo.facade;
+package com.example.demo.facade.impl;
 
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
-import com.example.demo.service.UserService;
+import com.example.demo.facade.AuthBasicFacade;
+import com.example.demo.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,18 +16,18 @@ import static com.example.demo.dto.RegistrationRequestProto.RegistrationRequestD
  * Provides authorization api
  */
 @Service
-public class AuthFacade {
-    @Autowired
-    private UserService userService;
+public class AuthFacade implements AuthBasicFacade {
+    private final UserService userService;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public AuthFacade(UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
-    /**
-     * Method for user registration. Create user with role SUBSCRIBER
-     *
-     * @param request {@link RegistrationRequestDto} object, contains username and password
-     */
+    @Override
     public void registration(RegistrationRequestDto request) {
         User user = new User();
         user.setUsername(request.getUsername());

@@ -4,7 +4,7 @@ import com.example.demo.entity.News;
 import com.example.demo.exception.news.NewsNotFoundException;
 import com.example.demo.exception.request.BadRequestParametersException;
 import com.example.demo.repo.NewsRepo;
-import com.example.demo.service.NewsService;
+import com.example.demo.service.impl.NewsService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;

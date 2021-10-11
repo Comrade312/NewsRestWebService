@@ -1,7 +1,7 @@
 package com.example.demo.unit.controller;
 
 import com.example.demo.controller.AuthController;
-import com.example.demo.facade.AuthFacade;
+import com.example.demo.facade.impl.AuthFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

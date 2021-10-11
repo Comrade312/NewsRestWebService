@@ -2,7 +2,7 @@ package com.example.demo;
 
 import com.example.demo.exception.news.NewsNotFoundException;
 import com.example.demo.exception.request.BadRequestParametersException;
-import com.example.demo.facade.NewsFacade;
+import com.example.demo.facade.impl.NewsFacade;
 import com.example.demo.repo.NewsRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

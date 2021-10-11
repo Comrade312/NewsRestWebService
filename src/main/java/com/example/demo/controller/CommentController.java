@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Comment;
 import com.example.demo.entity.User;
-import com.example.demo.facade.CommentFacade;
+import com.example.demo.facade.CommentCrudFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +28,12 @@ import static com.example.demo.dto.CommentProto.CommentSimpleDtoList;
 @RestController
 @RequestMapping(value = "/api/comment")
 public class CommentController {
+    private final CommentCrudFacade commentFacade;
+
     @Autowired
-    private CommentFacade commentFacade;
+    public CommentController(CommentCrudFacade commentFacade) {
+        this.commentFacade = commentFacade;
+    }
 
     /**
      * Method which shows all available {@link Comment}

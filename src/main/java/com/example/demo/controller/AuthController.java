@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.facade.AuthFacade;
+import com.example.demo.facade.AuthBasicFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,12 @@ import static com.example.demo.dto.RegistrationRequestProto.RegistrationRequestD
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+    private final AuthBasicFacade authFacade;
+
     @Autowired
-    private AuthFacade authFacade;
+    public AuthController(AuthBasicFacade authFacade) {
+        this.authFacade = authFacade;
+    }
 
     /**
      * Controller for POST request to register user

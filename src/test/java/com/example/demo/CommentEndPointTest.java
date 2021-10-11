@@ -2,7 +2,7 @@ package com.example.demo;
 
 import com.example.demo.exception.comment.CommentNotFoundException;
 import com.example.demo.exception.request.BadRequestParametersException;
-import com.example.demo.facade.CommentFacade;
+import com.example.demo.facade.impl.CommentFacade;
 import com.example.demo.repo.CommentRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

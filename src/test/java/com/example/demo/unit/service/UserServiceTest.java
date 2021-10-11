@@ -5,7 +5,7 @@ import com.example.demo.exception.request.BadRequestParametersException;
 import com.example.demo.exception.user.UserNotFoundException;
 import com.example.demo.exception.user.UsernameReservedException;
 import com.example.demo.repo.UserRepo;
-import com.example.demo.service.UserService;
+import com.example.demo.service.impl.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;

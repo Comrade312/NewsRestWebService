@@ -4,7 +4,7 @@ import com.example.demo.dto.UserProto;
 import com.example.demo.exception.request.BadRequestParametersException;
 import com.example.demo.exception.user.UserNotFoundException;
 import com.example.demo.exception.user.UsernameReservedException;
-import com.example.demo.facade.UserFacade;
+import com.example.demo.facade.impl.UserFacade;
 import com.example.demo.repo.UserRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
